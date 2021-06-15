@@ -2,11 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const App = () => {
+    let latitude = 0;
+    window.navigator.geolocation.getCurrentPosition(        
+        (position) => {
+            console.log(position);
+            latitude = position.coords.latitude;
+        },
+        (erreur) => {
+            console.log(erreur);
+        }
+    );
+
     return (
-        <div> Application Meteo
-            <button className="ui primary button">
-                Save
-            </button>
+        <div>
+            Latitude : {latitude}
         </div>
     );
 }
