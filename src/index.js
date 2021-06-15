@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import AfficherSaison from './afficherSaison';
 
 class App extends React.Component{ // Créer le composant via class method.
-    
+    state = { latitude : 0, messageErreur : '', longitude : 0};
+
     constructor(props){
       super(props);
-  
-      // Initialiser le state du composant.
-      this.state = { latitude : 0, messageErreur : '', longitude : 0}; 
-  
-      // Afficher la position de l'utilisateur.
+    } 
+
+    componentDidMount() {
+        // Récupérer la position de l'utilisateur.
       window.navigator.geolocation.getCurrentPosition(
         (position) => {
           console.log(position);
@@ -20,38 +21,17 @@ class App extends React.Component{ // Créer le composant via class method.
             this.setState({messageErreur : err.message});
         }
       )
-
-      /*var date = new Date();
-      console.log(date);
-      var month = date.getMonth() + 1;
-      console.log(month);
-      this.setState({mois : month});
-      console.log(this.state.mois);*/
-    }  
-
-    getSaison(latitude, mois) {
-        if(mois > 3 && mois < 10) {
-            return latitude > 0 ? "Saison chaude" : "Saison froide";
-        } else {
-            return latitude > 0 ? "Saison froide" : "Saison chaude";
-        }
     }
-  
-    render(){    
-        if(this.state.latitude != 0 && this.state.messageErreur == '') {            
-            var month = new Date().date.getMonth() + 1;
-            let saison = this.getSaison(this.state.latitude, month);
 
+    render(){
+        // Quand l'utilisateur accepte de donner sa position
+        if(this.state.latitude != 0 && this.state.messageErreur == '') { 
             return (
-                <div>
-                    <div>Latitude : { this.state.latitude }</div>
-                    <div>Longitude : { this.state.longitude }</div>
-                    <div>Mois : {month}</div>
-                    <div>Saison : {saison}</div>   
-                </div>              
-            )
+                <AfficherSaison latitude={this.state.latitude} longitude={this.state.longitude}></AfficherSaison>
+            )            
         }
 
+        // Quand l'utilisateur refuse de donner sa position
         if(this.state.latitude == 0 && this.state.messageErreur != '') {
             return (
                 <div>
@@ -60,11 +40,12 @@ class App extends React.Component{ // Créer le composant via class method.
             )
         }
     
+        // Quand le calcul de position est en train de faire.
         return (
             <div>
                 <div>"Encours de chargement"</div>
             </div>
-        )     
+        )    
     }
   }
   
